@@ -31,6 +31,7 @@ class DB {
   }
 
   public function select($table, $where = false, $limit = false, $order = '', $total = false, $assoc = false) {
+    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
     $cond = array();
     if ($where === false) {
       // nothing
@@ -53,7 +54,7 @@ class DB {
         }
       }
     }
-    $result = $this->$conn->query("SELECT * FROM {$table}" .
+    $result = $conn->query("SELECT * FROM {$table}" .
       (empty($cond) ? "" : (" WHERE " . implode(' AND ', $cond))) .
       (empty($order) ? "" : (" ORDER BY " . $order)) .
       (($limit === false) || $assoc ? "" : (" LIMIT " . (is_string($limit) ? $limit : max($limit, 1)))));
@@ -122,15 +123,17 @@ class DB {
   }
 
   public function assoc($table, $assoc, $where = false, $limit = false, $order = '', $total = false) {
-    return $this->select($table, $where, $limit, $order, $total, $assoc);
+    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    return $conn->select($table, $where, $limit, $order, $total, $assoc);
   }
 
   public function single($table, $where, $order = '') {
-    return $this->select($table, $where, 0, $order);
+    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    return $conn->select($table, $where, 0, $order);
   }
 
   public function insert($table, $vals, $keys = false) {
-    global $db;
+    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
 
     if (empty($vals)) {
       return false;
@@ -192,24 +195,17 @@ class DB {
       $fields[$i] = "`$field`";
     }
 
-    $this->$conn->query(
+    $conn->query(
       "INSERT INTO {$table} (" . implode(", ", $fields) . ")".
         " VALUES " . implode(", ", $rows) .
         (empty($dups) ? "" : (" ON DUPLICATE KEY UPDATE " . implode(", ", $dups)))
     );
 
-    return $this->$conn->insert_id;
+    return $conn->insert_id;
   }
 
   public function esc($string) {
-    return $this->$conn->escape_string($string);
-  }
-
-  public static function __callStatic($name, $arguments) {
-    // Redirect all static calls to the last instance
-    return call_user_func_array(
-      array(self::$instance, $name),
-      $arguments
-    );
+    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    return $conn->escape_string($string);
   }
 }
