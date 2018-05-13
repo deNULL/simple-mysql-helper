@@ -43,14 +43,14 @@ class DB {
         if (is_array($value)) {
           $opts = array();
           foreach ($value as $v) {
-            $opts[] = "'" . $db->escape_string($v) . "'";
+            $opts[] = "'" . $conn->escape_string($v) . "'";
           }
 
           $cond[] = $key . ' IN (' . implode(',', $opts) . ')';
           $assoc = ($limit === 0) ? $key : false;
         } else {
           $cond[] = $key . ' = ' . ((isset($value) && ($value !== null)) ?
-            "'" . $db->escape_string($value) . "'" : "NULL");
+            "'" . $conn->escape_string($value) . "'" : "NULL");
         }
       }
     }
@@ -60,7 +60,7 @@ class DB {
       (($limit === false) || $assoc ? "" : (" LIMIT " . (is_string($limit) ? $limit : max($limit, 1)))));
 
     if (!$result) {
-      /*error_log($db->error);
+      /*error_log($conn->error);
       error_log("SELECT * FROM {$table}" .
       (empty($cond) ? "" : (" WHERE " . implode(' AND ', $cond))) .
       (empty($order) ? "" : (" ORDER BY " . $order)) .
@@ -69,7 +69,7 @@ class DB {
       (empty($cond) ? "" : (" WHERE " . implode(' AND ', $cond))) .
       (empty($order) ? "" : (" ORDER BY " . $order)) .
       ($limit === false ? "" : (" LIMIT " . max($limit, 1)));
-      print_r($db->error);*/
+      print_r($conn->error);*/
       return false;
     }
 
@@ -183,7 +183,7 @@ class DB {
       $row = array();
       foreach ($fields as $key) {
         if (isset($val[$key]) && ($val[$key] !== null)) {
-          $row[] = "'" . $db->escape_string($val[$key]) . "'";
+          $row[] = "'" . $conn->escape_string($val[$key]) . "'";
         } else {
           $row[] = "NULL";
         }
