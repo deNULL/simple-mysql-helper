@@ -26,6 +26,10 @@ class DB {
     self::$instance = $this;
   }
 
+  public static function connect($db_name = false, $db_host = false, $db_user = false, $db_pass = false) {
+    return new DB($db_name, $db_host, $db_user, $db_pass);
+  }
+
   public function select($table, $where = false, $limit = false, $order = '', $total = false, $assoc = false) {
     $cond = array();
     if ($where === false) {
