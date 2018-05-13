@@ -113,7 +113,7 @@ class DB {
     }
     $resp = (($limit === 0) && !$assoc ? (empty($rows) ? false : $rows[0]) : $rows);
     if ($total) {
-      $result = $db->query("SELECT COUNT(*) AS total FROM {$table}" .
+      $result = $conn->query("SELECT COUNT(*) AS total FROM {$table}" .
         (empty($cond) ? "" : (" WHERE " . implode(' AND ', $cond))));
       $row = $result->fetch_assoc();
       $resp = array($resp, intval($row['total']));
