@@ -31,7 +31,7 @@ class DB {
   }
 
   public function select($table, $where = false, $limit = false, $order = '', $total = false, $assoc = false) {
-    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    $conn = isset($this) ? $this->conn : self::$instance->conn;
     $cond = array();
     if ($where === false) {
       // nothing
@@ -123,17 +123,17 @@ class DB {
   }
 
   public function assoc($table, $assoc, $where = false, $limit = false, $order = '', $total = false) {
-    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    $conn = isset($this) ? $this->conn : self::$instance->conn;
     return $conn->select($table, $where, $limit, $order, $total, $assoc);
   }
 
   public function single($table, $where, $order = '') {
-    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    $conn = isset($this) ? $this->conn : self::$instance->conn;
     return $conn->select($table, $where, 0, $order);
   }
 
   public function insert($table, $vals, $keys = false) {
-    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    $conn = isset($this) ? $this->conn : self::$instance->conn;
 
     if (empty($vals)) {
       return false;
@@ -205,7 +205,7 @@ class DB {
   }
 
   public function esc($string) {
-    $conn = isset($this) ? $this->$conn : self::$instance->$conn;
+    $conn = isset($this) ? $this->conn : self::$instance->conn;
     return $conn->escape_string($string);
   }
 }
