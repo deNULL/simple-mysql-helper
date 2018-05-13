@@ -207,8 +207,9 @@ class DB {
 
   public static function __callStatic($name, $arguments) {
     // Redirect all static calls to the last instance
-    return call_user_func_array(
-      array(self::$instance, $name),
+    return call_user_method(
+      $name,
+      self::$instance,
       $arguments
     );
   }
