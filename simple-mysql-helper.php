@@ -121,15 +121,15 @@ class DB {
     return $resp;
   }
 
-  function assoc($table, $assoc, $where = false, $limit = false, $order = '', $total = false) {
+  public function assoc($table, $assoc, $where = false, $limit = false, $order = '', $total = false) {
     return $this->select($table, $where, $limit, $order, $total, $assoc);
   }
 
-  function single($table, $where, $order = '') {
+  public function single($table, $where, $order = '') {
     return $this->select($table, $where, 0, $order);
   }
 
-  function insert($table, $vals, $keys = false) {
+  public function insert($table, $vals, $keys = false) {
     global $db;
 
     if (empty($vals)) {
@@ -207,9 +207,8 @@ class DB {
 
   public static function __callStatic($name, $arguments) {
     // Redirect all static calls to the last instance
-    return call_user_method(
-      $name,
-      self::$instance,
+    return call_user_func_array(
+      array(self::$instance, $name),
       $arguments
     );
   }
